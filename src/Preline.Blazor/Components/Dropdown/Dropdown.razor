@@ -1,0 +1,125 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<CascadingValue Value="this" IsFixed>
+    <div class="@Class" style="@Style" @attributes="AdditionalAttributes">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-dropdown-{Identifier.NewId()}";
+    [Parameter] public Placements? Placement { get; set; }
+    [Parameter] public Scopes? Scope { get; set; }
+    [Parameter] public Zones? AutoClose { get; set; }
+    [Parameter] public Strategies? Strategy { get; set; }
+    [Parameter] public Triggers?  Trigger{ get; set; }
+    [Parameter] public bool? HasAutofocus { get; set; }
+    [Parameter] public bool? GpuAcceleration { get; set; }
+    [Parameter] public bool? Flip { get; set; }
+    [Parameter] public double? Offset { get; set; }
+
+    private string Class => new CssBuilder("hs-dropdown relative inline-flex")
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string Style => new StyleBuilder()
+        .Add("--placement", Placement?.GetDescription(), when: Placement is not null)
+        .Add("--scope", Scope?.GetDescription(), when: Scope is not null)
+        .Add("--auto-close", AutoClose?.GetDescription(), when: AutoClose is not null)
+        .Add("--strategy", Strategy?.GetDescription(), when: Strategy is not null)
+        .Add("--trigger", Trigger?.GetDescription(), when: Trigger is not null)
+        .Add("--flip", Flip.ToString()?.ToLowerInvariant(), when: Flip is not null)
+        .Add("--has-autofocus", HasAutofocus.ToString()?.ToLowerInvariant(), when: HasAutofocus is not null)
+        .Add("--gpu-acceleration", GpuAcceleration.ToString()?.ToLowerInvariant(), when: GpuAcceleration is not null)
+        .Add("--offset", Offset?.ToString(CultureInfo.InvariantCulture), when: Offset is not null)
+        .Add(AdditionalAttributes)
+        .Build();
+
+    public enum Placements
+    {
+        [Description("top")]
+        Top,
+
+        [Description("top-left")]
+        TopLeft,
+
+        [Description("top-right")]
+        TopRight,
+
+        [Description("bottom")]
+        Bottom,
+
+        [Description("bottom-left")]
+        BottomLeft,
+
+        [Description("bottom-right")]
+        BottomRight,
+
+        [Description("right")]
+        Right,
+
+        [Description("right-top")]
+        RightTop,
+
+        [Description("right-bottom")]
+        RightBottom,
+
+        [Description("left")]
+        Left,
+
+        [Description("left-top")]
+        LeftTop,
+
+        [Description("left-bottom")]
+        LeftBottom
+    }
+
+    public enum Scopes
+    {
+        [Description("parent")]
+        Parent,
+
+        [Description("window")]
+        Window
+    }
+
+    public enum Zones
+    {
+        [Description("inside")]
+        Inside,
+
+        [Description("outside")]
+        Outside,
+
+        [Description("false")]
+        False,
+
+        [Description("true")]
+        True
+    }
+
+    public enum Strategies
+    {
+        [Description("fixed")]
+        Fixed,
+
+        [Description("absolute")]
+        Absolute
+    }
+
+    public enum Triggers
+    {
+        [Description("hover")]
+        Hover,
+
+        [Description("click")]
+        Click,
+        
+        [Description("contextmenu")]
+        ContextMenu
+    }
+}

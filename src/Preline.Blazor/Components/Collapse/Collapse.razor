@@ -1,0 +1,16 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div id="@Id" class="@Class" aria-labelledby="@LabelledBy" @attributes="AdditionalAttributes">
+    This is a collapse body. It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions.
+</div>
+
+@code
+{
+    [Parameter, EditorRequired] public string LabelledBy { get; set; }
+    [Parameter] public string Id { get; set; } = $"hs-collapse-{Identifier.NewId()}";
+
+    private string Class => new CssBuilder("hs-collapse hidden w-full overflow-hidden transition-[height] duration-300")
+        .Add(AdditionalAttributes)
+        .Build();
+}

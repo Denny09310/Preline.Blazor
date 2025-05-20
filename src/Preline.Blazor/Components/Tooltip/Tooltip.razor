@@ -1,0 +1,90 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div class="hs-tooltip inline-block" style="@Style">
+    <div class="hs-tooltip-toggle">
+        @ChildContent
+    </div>
+    <span class="@Class" role="tooltip" @attributes="AdditionalAttributes">
+        @Title
+    </span>
+</div>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter, EditorRequired] public string Title { get; set; }
+    [Parameter] public bool? PreventPopper { get; set; }
+    [Parameter] public Triggers? Trigger { get; set; }
+    [Parameter] public Placements? Placement { get; set; }
+    [Parameter] public Strategies? Strategy { get; set; }
+
+    private string Class => new CssBuilder("hs-tooltip-content invisible absolute z-10 opacity-0 hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible")
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string Style => new StyleBuilder()
+        .Add("--prevent-popper", PreventPopper.ToString()?.ToLowerInvariant(), when: PreventPopper is not null)
+        .Add("--trigger", Trigger?.GetDescription(), when: Trigger is not null)
+        .Add("--placement", Placement?.GetDescription(), when: Placement is not null)
+        .Add("--strategy", Strategy?.GetDescription(), when: Strategy is not null)
+        .Build();
+
+    public enum Triggers
+    {
+        [Description("focus")]
+        Focus,
+
+        [Description("hover")]
+        Hover
+    }
+
+    public enum Placements
+    {
+        [Description("top")]
+        Top,
+
+        [Description("top-left")]
+        TopLeft,
+
+        [Description("top-right")]
+        TopRight,
+
+        [Description("bottom")]
+        Bottom,
+
+        [Description("bottom-left")]
+        BottomLeft,
+
+        [Description("bottom-right")]
+        BottomRight,
+
+        [Description("right")]
+        Right,
+
+        [Description("right-top")]
+        RightTop,
+
+        [Description("right-bottom")]
+        RightBottom,
+
+        [Description("left")]
+        Left,
+
+        [Description("left-top")]
+        LeftTop,
+
+        [Description("left-bottom")]
+        LeftBottom
+    }
+
+    public enum Strategies
+    {
+        [Description("fixed")]
+        Fixed,
+
+        [Description("absolute")]
+        Absolute
+    }
+}

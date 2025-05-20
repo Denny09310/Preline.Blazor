@@ -1,0 +1,15 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<h2 class="@Class" @attributes="AdditionalAttributes">
+    @ChildContent
+</h2>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Class => new CssBuilder("text-3xl dark:text-white")
+        .Add(AdditionalAttributes)
+        .Build();
+}

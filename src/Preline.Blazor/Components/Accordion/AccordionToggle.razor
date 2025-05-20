@@ -1,0 +1,23 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<button class="@Class" aria-expanded="@Accordion.Active" aria-controls="@Accordion.Id" style="@Style" @attributes="AdditionalAttributes">
+    @ChildContent
+</button>
+
+@code
+{
+    [CascadingParameter] private Accordion Accordion { get; set; } = default!;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public bool? StopPropagation { get; set; }
+
+    private string Class => new CssBuilder("hs-accordion-toggle")
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string Style => new StyleBuilder()
+        .Add("--stop-propagation", StopPropagation.ToString()?.ToLowerInvariant(), when: StopPropagation is not null)
+        .Build();
+}

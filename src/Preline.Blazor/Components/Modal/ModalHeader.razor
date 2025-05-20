@@ -1,0 +1,13 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<h3 id="@Overlay.Id" @attributes="AdditionalAttributes">
+    @Title
+</h3>
+
+@code
+{
+    [CascadingParameter] private Overlay Overlay { get; set; } = default!;
+    
+    [Parameter, EditorRequired] public string Title { get; set; }
+}

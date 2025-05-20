@@ -1,0 +1,44 @@
+@namespace Preline.Blazor.Components
+@inject IModalService ModalService
+
+<Modal @ref="modal" VisibilityChanged="VisibilityChangedHandler">
+    @content    
+</Modal>
+
+@code
+{
+    private Modal modal = default!;
+
+    private RenderFragment? content;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        ModalService.OpenRequestedAsync += OpenRequestedAsyncHandler;
+        ModalService.CloseRequestedAsync += CloseRequestedAsyncHandler;
+    }
+
+    private async Task VisibilityChangedHandler(bool open)
+    {
+        if (open) return;
+
+        ModalService.Close(ModalResult.Cancel());
+        
+        content = null;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OpenRequestedAsyncHandler(RenderFragment content)
+    {
+        this.content = content;
+
+        await modal.OpenAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CloseRequestedAsyncHandler()
+    {
+        await modal.CloseAsync();
+    }
+}

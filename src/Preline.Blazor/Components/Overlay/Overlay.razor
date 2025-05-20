@@ -1,0 +1,126 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+
+<CascadingValue Value="this" IsFixed>
+    <div @ref="element" id="@Id" class="hs-overlay pointer-events-none fixed start-0 top-0 z-60 hidden size-full overflow-x-hidden overflow-y-auto" role="dialog" tabindex="-1" aria-labelledby="hs-overlay-@Id-label" @attributes="AdditionalAttributes">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-overlay-{Identifier.NewId()}";
+    [Parameter] public bool? BodyScroll { get; set; }
+    [Parameter] public bool? TabAccessibilityLimited { get; set; }
+    [Parameter] public bool? HasAutofocus { get; set; }
+    [Parameter] public bool? HasDynamicZIndex { get; set; }
+    [Parameter] public bool? IsLayoutAffect { get; set; }
+    [Parameter] public OverlayBackdrops? OverlayBackdrop { get; set; }
+    [Parameter] public Resolutions? AutoClose { get; set; }
+    [Parameter] public EqualityTypes? AutoCloseEqualityType { get; set; }
+    [Parameter] public Resolutions? Opened { get; set; }
+    [Parameter] public double? AutoHide { get; set; }
+
+    [Parameter] public EventCallback<bool> VisibilityChanged { get; set; }
+
+    private string Style => new StyleBuilder()
+        .Add("--body-scroll", BodyScroll.ToString()?.ToLowerInvariant(), when: BodyScroll is not null)
+        .Add("--tab-accessibility-limited", TabAccessibilityLimited.ToString()?.ToLowerInvariant(), when: TabAccessibilityLimited is not null)
+        .Add("--has-autofocus", HasAutofocus.ToString()?.ToLowerInvariant(), when: HasAutofocus is not null)
+        .Add("--has-dynamic-z-index", HasDynamicZIndex.ToString()?.ToLowerInvariant(), when: HasDynamicZIndex is not null)
+        .Add("--is-layout-affect", IsLayoutAffect.ToString()?.ToLowerInvariant(), when: IsLayoutAffect is not null)
+        .Add("--overlay-backdrop", OverlayBackdrop, when: OverlayBackdrop is not null)
+        .Add("--auto-close", AutoClose, when: AutoClose is not null)
+        .Add("--auto-close-equality-type", AutoCloseEqualityType, when: AutoCloseEqualityType is not null)
+        .Add("--opened", Opened, when: Opened is not null)
+        .Add("--auto-hide", AutoHide, when: AutoHide is not null)
+        .Build();
+
+    private ElementReference element;
+    private IJSObjectReference? reference;
+    private DotNetObjectReference<Overlay>? instance;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (reference is not null)
+        {
+            try
+            {
+                await reference.InvokeVoidAsync("destroy");
+                await reference.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // This exception can be ignored
+            }
+        }
+
+        instance?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public ValueTask CloseAsync() => reference!.InvokeVoidAsync("close");
+
+    public ValueTask OpenAsync() => reference!.InvokeVoidAsync("open");
+
+    [JSInvokable]
+    public Task NotifyVisibilityChanged(bool open) => VisibilityChanged.InvokeAsync(open);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (!firstRender) return;
+
+        await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/Preline.Blazor/Components/Overlay/Overlay.razor.js");
+
+        instance = DotNetObjectReference.Create(this);
+        reference = await module.InvokeAsync<IJSObjectReference>("init", element, instance, new
+        {
+
+        });
+    }
+
+    public enum OverlayBackdrops
+    {
+        [Description("null")]
+        Null,
+
+        [Description("static")]
+        Static
+    }
+
+    public enum Resolutions
+    {
+        [Description("sm")]
+        Sm,
+
+        [Description("md")]
+        Md,
+
+        [Description("lg")]
+        Lg,
+
+        [Description("xl")]
+        Xl,
+
+        [Description("2xl")]
+        Xxl
+    }
+
+    public enum EqualityTypes
+    {
+
+        [Description("null")]
+        Null,
+
+        [Description("less-than")]
+        LessThan,
+    }
+}

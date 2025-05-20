@@ -1,0 +1,22 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div class="@Class" style="@Style" @attributes="AdditionalAttributes" data-hs-accordion-always-open="@Multiple">
+    @ChildContent
+</div>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public bool Multiple { get; set; }
+    [Parameter] public bool? KeepOneOpen { get; set; }
+
+    private string Class => new CssBuilder("hs-accordion-group")
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string Style => new StyleBuilder()
+        .Add("--keep-one-open", KeepOneOpen.ToString()?.ToLowerInvariant(), when: KeepOneOpen is not null)
+        .Build();
+}

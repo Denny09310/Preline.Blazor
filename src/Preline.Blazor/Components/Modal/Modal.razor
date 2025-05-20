@@ -1,0 +1,39 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<Overlay @ref="overlay" Id="@Id" BodyScroll="@BodyScroll" TabAccessibilityLimited="@TabAccessibilityLimited" HasAutofocus="@HasAutofocus" HasDynamicZIndex="@HasDynamicZIndex" IsLayoutAffect="@IsLayoutAffect" OverlayBackdrop="@OverlayBackdrop" AutoClose="@AutoClose" AutoCloseEqualityType="@AutoCloseEqualityType" Opened="@Opened" AutoHide="@AutoHide" VisibilityChanged="@VisibilityChanged">
+    <div class="@Class" @attributes="AdditionalAttributes">
+        <div class="pointer-events-auto">
+            @ChildContent?.Invoke(overlay)
+        </div>
+    </div>
+</Overlay>
+
+@code
+{
+    [Parameter] public RenderFragment<Overlay>? ChildContent { get; set; }
+
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public bool? BodyScroll { get; set; }
+    [Parameter] public bool? TabAccessibilityLimited { get; set; }
+    [Parameter] public bool? HasAutofocus { get; set; }
+    [Parameter] public bool? HasDynamicZIndex { get; set; }
+    [Parameter] public bool? IsLayoutAffect { get; set; }
+    [Parameter] public Overlay.OverlayBackdrops? OverlayBackdrop { get; set; }
+    [Parameter] public Overlay.Resolutions? AutoClose { get; set; }
+    [Parameter] public Overlay.EqualityTypes? AutoCloseEqualityType { get; set; }
+    [Parameter] public Overlay.Resolutions? Opened { get; set; }
+    [Parameter] public double? AutoHide { get; set; }
+
+    [Parameter] public EventCallback<bool> VisibilityChanged { get; set; }
+
+    private Overlay overlay = default!;
+
+    private string Class => new CssBuilder("hs-overlay-animation-target m-3 opacity-0 transition-all duration-300 sm:max-w-lg sm:w-full sm:mx-auto hs-overlay-open:opacity-100 hs-overlay-open:duration-500 ")
+        .Add(AdditionalAttributes)
+        .Build();
+
+    public ValueTask CloseAsync() => overlay.CloseAsync();
+
+    public ValueTask OpenAsync() => overlay.OpenAsync();
+}

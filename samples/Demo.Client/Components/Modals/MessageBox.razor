@@ -1,0 +1,41 @@
+@namespace Preline.Blazor
+@using Preline.Blazor.Services
+
+<div class="pointer-events-auto flex flex-col rounded-xl border border-gray-200 bg-white shadow-2xs dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+    <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-neutral-700">
+        <ModalHeader Title="@Title" class="font-bold text-gray-800 dark:text-white" />
+        <button type="button" class="border-transparent flex size-7 items-center justify-center rounded-full border text-sm font-semibold text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" aria-label="Close" @onclick="CancelAsync">
+            <svg class="size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+            <span class="sr-only">Close</span>
+        </button>
+    </div>
+    <ModalContent Class="p-4">
+        <p class="mt-1 text-gray-800 dark:text-neutral-400">
+            @Message
+        </p>
+    </ModalContent>
+    <ModalFooter Class="border-t border-gray-200 px-4 py-3 dark:border-neutral-700">
+        <button type="button" class="inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" @onclick="CancelAsync">
+            @CancelText
+        </button>
+        <button type="button" class="border-transparent inline-flex items-center gap-x-2 rounded-lg border bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" @onclick="CloseAsync">
+            @OkText
+        </button>
+    </ModalFooter>
+</div>
+
+@code
+{
+    [CascadingParameter] public ModalInstance Instance { get; set; } = default!;
+
+    [Parameter, EditorRequired] public string Message { get; set; }
+    [Parameter] public string Title { get; set; } = "Info";
+    [Parameter] public string OkText { get; set; } = "Ok";
+    [Parameter] public string CancelText { get; set; } = "Cancel";
+
+    private void CancelAsync() => Instance.CancelAsync();
+    private void CloseAsync() => Instance.CloseAsync();
+}

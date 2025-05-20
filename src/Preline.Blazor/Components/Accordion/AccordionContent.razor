@@ -1,0 +1,19 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div id="@Id" class="@Class" role="region" aria-labelledby="@Accordion.Id" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    [CascadingParameter] private Accordion Accordion { get; set; } = default!;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-collapse-{Identifier.NewId()}";
+
+    private string Class => new CssBuilder("hs-accordion-content hidden overflow-hidden transition-[height] duration-300")
+        .Add(AdditionalAttributes)
+        .Build();
+}

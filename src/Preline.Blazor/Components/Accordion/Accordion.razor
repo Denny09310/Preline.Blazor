@@ -1,0 +1,21 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<CascadingValue Value="this" IsFixed>
+    <div class="@Class" id="@Id" @attributes="AdditionalAttributes">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-accordion-{Identifier.NewId()}";
+    [Parameter] public bool Active { get; set; }
+
+    private string Class => new CssBuilder("hs-accordion")
+        .Add(AdditionalAttributes)
+        .Add("active", when: Active)
+        .Build();
+}

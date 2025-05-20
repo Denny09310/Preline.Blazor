@@ -1,0 +1,15 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div class="@Class" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Class => new CssBuilder("overflow-y-auto")
+        .Add(AdditionalAttributes)
+        .Build();
+}
