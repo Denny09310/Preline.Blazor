@@ -1,0 +1,57 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<button type="@Type" class="@Class" @attributes="AdditionalAttributes">
+    @ChildContent
+</button>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Type { get; set; } = "button";
+    [Parameter] public Sizes Size { get; set; }
+    [Parameter] public Variants Variant { get; set; }
+
+    private string Class => new CssBuilder("inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border disabled:opacity-50 disabled:pointer-events-none")
+        .Add(SelectSize())
+        .Add(SelectVariant())
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string SelectSize() => Size switch
+    {
+        Sizes.Default => "py-3 px-4",
+        Sizes.Small => "py-2 px-3",
+        Sizes.Large => "p-4 sm:p-5",
+        _ => throw new NotImplementedException()
+    };
+
+    private string SelectVariant() => Variant switch
+    {
+        Variants.Solid => "border-transparent bg-gray-800 text-white hover:bg-gray-900 focus:outline-hidden focus:bg-gray-900 dark:bg-white dark:text-neutral-800",
+        Variants.Outline => "border-gray-800 text-gray-800 hover:border-gray-500 hover:text-gray-500 focus:outline-hidden focus:border-gray-500 focus:text-gray-500 dark:border-white dark:text-white dark:hover:text-neutral-300 dark:hover:border-neutral-300",
+        Variants.Ghost => "border-transparent text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
+        Variants.Soft => "border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 dark:hover:text-white dark:focus:bg-white/20 dark:focus:text-white",
+        Variants.White => "border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
+        Variants.Link => "font-semibold border-none text-gray-800 hover:text-blue-600 focus:outline-hidden focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:text-white/70 dark:focus:text-white/70",
+        _ => throw new NotImplementedException()
+    };
+
+    public enum Sizes
+    {
+        Default,
+        Small,
+        Large
+    }
+
+    public enum Variants
+    {
+        Solid,
+        Outline,
+        Ghost,
+        Soft,
+        White,
+        Link,
+    }
+}
