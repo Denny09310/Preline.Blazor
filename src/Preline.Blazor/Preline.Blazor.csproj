@@ -39,6 +39,14 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Remove="libman.json" />
+		<Content Remove="package.json" />
+
+		<None Include="libman.json" />
+		<None Include="package.json" />
+	</ItemGroup>
+
 	<Target Name="Tailwind" BeforeTargets="Compile">
 		<Exec Command="tailwindcss-windows-x64.exe -i .\wwwroot\css\preline.css -o .\wwwroot\css\preline.min.css --minify" />
 	</Target>

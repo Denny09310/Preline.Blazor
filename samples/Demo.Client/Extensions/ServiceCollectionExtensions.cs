@@ -1,10 +1,10 @@
-namespace Microsoft.Extensions.DependencyInjection;
+﻿namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
-        services.AddComponents();
+        services.AddPrelineServices();
         return services;
     }
 }
