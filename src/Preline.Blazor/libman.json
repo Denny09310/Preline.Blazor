@@ -1,11 +1,11 @@
-{
+﻿{
   "version": "3.0",
   "defaultProvider": "jsdelivr",
   "libraries": [
     {
       "destination": "wwwroot/lib/preline",
       "files": [ "preline.min.js" ],
-      "library": "preline@3.0.1"
+      "library": "preline@3.2.3"
     }
   ]
 }

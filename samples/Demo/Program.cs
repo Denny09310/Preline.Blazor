@@ -1,4 +1,4 @@
-using Demo.Components;
+﻿using Demo.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +31,6 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Demo.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(Demo.Client.Components._Imports).Assembly);
 
 app.Run();

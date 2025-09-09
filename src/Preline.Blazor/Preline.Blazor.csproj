@@ -25,12 +25,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Remove="libman.json" />
-		<Content Remove="package.json" />
-		<Content Remove="package-lock.json" />
+		<PackageReference Include="TailwindMerge.NET" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,6 +37,14 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="libman.json" />
+		<Content Remove="package.json" />
+
+		<None Include="libman.json" />
+		<None Include="package.json" />
 	</ItemGroup>
 
 	<Target Name="Tailwind" BeforeTargets="Compile">
