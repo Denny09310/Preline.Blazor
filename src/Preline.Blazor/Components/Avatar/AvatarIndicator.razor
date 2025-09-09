@@ -1,0 +1,52 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<span class="@Class" @attributes="AdditionalAttributes">
+    @ChildContent
+</span>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public IndicatorPositions Position { get; set; } = IndicatorPositions.TopRight;
+    [Parameter] public IndicatorSizes Size { get; set; } = IndicatorSizes.Medium;
+
+    private string Class => new CssBuilder("absolute block size-1.5 rounded-full ring-2 ring-white bg-gray-400 dark:ring-neutral-900")
+        .Add(SelectPosition())
+        .Add(SelectSize())
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string SelectPosition() => Position switch
+    {
+        IndicatorPositions.TopLeft => "top-0 start-0",
+        IndicatorPositions.BottomRight => "bottom-0 end-0",
+        IndicatorPositions.BottomLeft => "bottom-0 start-0",
+        _ or IndicatorPositions.TopRight => "top-0 end-0",
+    };
+
+    private string SelectSize() => Size switch
+    {
+        IndicatorSizes.Small => "size-1.5",
+        IndicatorSizes.Large => "size-3",
+        IndicatorSizes.ExtraLarge => "size-3.5",
+        _ or IndicatorSizes.Medium => "size-2",
+    };
+
+    public enum IndicatorPositions
+    {
+        TopRight,
+        TopLeft,
+        BottomRight,
+        BottomLeft
+    }
+
+    public enum IndicatorSizes
+    {
+        Small,
+        Medium,
+        Large,
+        ExtraLarge
+    }
+}
