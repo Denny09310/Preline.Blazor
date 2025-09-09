@@ -1,0 +1,17 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<h3 id="@Alert.Id" class="@Class" @attributes="AdditionalAttributes">
+    @ChildContent
+</h3>
+
+@code 
+{
+    [CascadingParameter] private Alert Alert { get; set; } = default!;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Class => new CssBuilder("font-semibold text-gray-800 dark:text-white")
+        .Add(AdditionalAttributes)
+        .Build();
+}
