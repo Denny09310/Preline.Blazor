@@ -47,7 +47,7 @@
 		<None Include="package.json" />
 	</ItemGroup>
 
-	<Target Name="Tailwind" BeforeTargets="Compile">
+	<Target Name="Tailwind" BeforeTargets="Publish">
 		<Exec Command="tailwindcss-windows-x64.exe -i .\wwwroot\css\preline.css -o .\wwwroot\css\preline.min.css --minify" />
 	</Target>
 
