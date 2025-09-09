@@ -29,12 +29,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Remove="libman.json" />
-		<Content Remove="package.json" />
-		<Content Remove="package-lock.json" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="..\..\icon.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
