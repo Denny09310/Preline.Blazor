@@ -1,0 +1,21 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<CascadingValue Value="this" IsFixed>
+    <div class="@Class" role="alert" tabindex="-1" aria-labelledby="@Id">
+        
+    </div>
+</CascadingValue>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public RenderFragment? Action { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-alert-{Identifier.NewId()}";
+
+    private string Class => new CssBuilder("bg-white border border-gray-200 rounded-lg shadow-lg p-4 dark:bg-neutral-800 dark:border-neutral-700")
+        .Add(AdditionalAttributes)
+        .Build();
+}
