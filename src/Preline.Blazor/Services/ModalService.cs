@@ -12,6 +12,7 @@ public interface IModalService
 
     Task CloseAsync(ModalResult result);
     Task<ModalResult> OpenAsync<TContent>(Dictionary<string, object?>? parameters = null) where TContent : IComponent;
+    Task<ModalResult> OpenAsync<TContent>(string title, Dictionary<string, object?>? parameters = null) where TContent : IComponent;
 }
 
 public class ModalService : IModalService
@@ -53,6 +54,14 @@ public class ModalService : IModalService
             _completing = false;
         }
     }
+
+    public Task<ModalResult> OpenAsync<TContent>(string title, Dictionary<string, object?>? parameters = null)
+                where TContent : IComponent
+    {
+        parameters ??= [];
+        parameters["Title"] = title;
+        return OpenAsync<TContent>(parameters);
+    }
     public async Task<ModalResult> OpenAsync<TContent>(Dictionary<string, object?>? parameters = null) where TContent : IComponent
     {
         _result = new();
@@ -79,7 +88,7 @@ public class ModalService : IModalService
         builder.OpenComponent<CascadingValue<ModalInstance>>(seq++);
         builder.AddComponentParameter(seq++, nameof(CascadingValue<ModalInstance>.Value), new ModalInstance(CloseAsync));
         builder.AddComponentParameter(seq++, nameof(CascadingValue<ModalInstance>.IsFixed), true);
-        builder.AddComponentParameter(seq++, nameof(CascadingValue<ModalInstance>.ChildContent), fragment);
+        builder.AddComponentParameter(seq, nameof(CascadingValue<ModalInstance>.ChildContent), fragment);
         builder.CloseComponent();
     };
 }
