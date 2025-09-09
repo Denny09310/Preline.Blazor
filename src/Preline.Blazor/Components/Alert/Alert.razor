@@ -2,8 +2,20 @@
 @inherits PrelineComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    <div class="@Class" role="alert" tabindex="-1" aria-labelledby="@Id">
-        
+    <div class="@Class" role="alert" tabindex="-1" aria-labelledby="@Id" @attributes="AdditionalAttributes">
+        @if (Icon is not null)
+        {
+            <span class="me-3">@Icon</span>
+        }
+
+        <div class="flex-1">
+            @ChildContent
+        </div>
+
+        @if (Action is not null)
+        {
+            <div class="ms-3">@Action</div>
+        }
     </div>
 </CascadingValue>
 
@@ -15,7 +27,25 @@
 
     [Parameter] public string Id { get; set; } = $"hs-alert-{Identifier.NewId()}";
 
-    private string Class => new CssBuilder("bg-white border border-gray-200 rounded-lg shadow-lg p-4 dark:bg-neutral-800 dark:border-neutral-700")
+    [Parameter] public AlertVariant Variant { get; set; } = AlertVariant.Solid;
+
+    private string Class => new CssBuilder("flex items-start rounded-lg p-4 border shadow-sm")
+        .Add(SelectClasses())
         .Add(AdditionalAttributes)
         .Build();
+
+    private string SelectClasses() => Variant switch
+    {
+        AlertVariant.Solid => "bg-white border-gray-200 text-gray-800 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200",
+        AlertVariant.Outlined => "border border-gray-200 text-gray-800 dark:border-neutral-700 dark:text-neutral-200",
+        AlertVariant.Soft => "bg-gray-50 text-gray-800 dark:bg-neutral-800/5 dark:text-neutral-200",
+        _ => string.Empty
+    };
+
+    public enum AlertVariant
+    {
+        Solid,
+        Outlined,
+        Soft
+    }
 }
