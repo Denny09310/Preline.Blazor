@@ -1,4 +1,4 @@
-using TailwindMerge;
+﻿using TailwindMerge;
 
 namespace Preline.Blazor.Internals;
 
@@ -29,13 +29,17 @@ internal readonly struct CssBuilder
         return this;
     }
 
-    public CssBuilder Add(Dictionary<string, object> attributes)
+    public CssBuilder Add(IReadOnlyDictionary<string, object>? attributes)
     {
+        if (attributes == null)
+        {
+            return this;
+        }
+
         if (attributes.TryGetValue("class", out var obj)
             && obj is string str
             && !string.IsNullOrWhiteSpace(str))
         {
-            attributes.Remove("class");
             _classes.Add(str);
         }
 
