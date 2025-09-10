@@ -1,1 +1,27 @@
-@page "/"
+﻿@page "/"
+
+<Select TOption="User" @bind-Value="selected" Items="@users" ValueSelector="@(item => item.Id)" Placeholder="Open this select menu">
+    <ItemContent>
+        @context.Username
+    </ItemContent>
+</Select>
+
+<p>@selected?.Id</p>
+
+@code
+{
+    private static readonly List<User> users = new()
+    {
+        new User("Dennis Koja"),
+        new User("Luca Montalbano"),
+        new User("Ilio Bracciali"),
+    };
+
+    private User? selected;
+
+    private sealed class User(string username)
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Username { get; set; } = username;
+    }
+}

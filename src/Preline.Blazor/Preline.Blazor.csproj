@@ -42,6 +42,7 @@
 	<ItemGroup>
 		<Content Remove="libman.json" />
 		<Content Remove="package.json" />
+		<None Include="Components\Select\Select.razor" />
 
 		<None Include="libman.json" />
 		<None Include="package.json" />

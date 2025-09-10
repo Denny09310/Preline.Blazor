@@ -1,0 +1,84 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineInputBase<TOption>
+@typeparam TOption where TOption : notnull
+@attribute [CascadingTypeParameter(nameof(TOption))]
+
+<select class="@Class" @bind="CurrentValueAsString" @attributes="AdditionalAttributes">
+    @if (!HasValue)
+    {
+        <option value="" disabled selected>
+            @Placeholder
+        </option>
+    }
+
+    @foreach (var item in Items)
+    {
+        <option value="@ValueSelector(item)">
+            @if (ItemContent is not null)
+            {
+                @ItemContent(item)
+            }
+            else
+            {
+                @item?.ToString()
+            }
+        </option>
+    }
+</select>
+
+@code
+{
+    [Parameter] public RenderFragment<TOption>? ItemContent { get; set; }
+
+    [Parameter] public string? Placeholder { get; set; }
+
+    [Parameter] public Select.Variants Variant { get; set; }
+
+    [Parameter] public IEnumerable<TOption> Items { get; set; } = [];
+
+    [Parameter] public Func<TOption, string?> ValueSelector { get; set; } = item => BindConverter.FormatValue(item)?.ToString();
+
+    private bool HasValue => !EqualityComparer<TOption>.Default.Equals(Value, default);
+
+    private string Class => new CssBuilder("block w-full rounded-lg px-4 py-3 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-400 dark:focus:ring-neutral-600")
+        .Add(SelectVariant())
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string SelectVariant() => Variant switch
+    {
+        Select.Variants.Gray => "border-transparent bg-gray-100 dark:placeholder-neutral-500 dark:border-neutral-700 dark:bg-neutral-900",
+        _ or Select.Variants.Default => "border-gray-200 dark:bg-neutral-700 dark:border-transparent"
+    };
+
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TOption result, [NotNullWhen(false)] out string validationErrorMessage)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            result = default!;
+            validationErrorMessage = string.Empty;
+            return true;
+        }
+
+        // First try to resolve by matching the ItemValue (this allows complex object binding)
+        var match = Items.FirstOrDefault(i => ValueSelector(i) == value);
+        if (!EqualityComparer<TOption>.Default.Equals(match, default))
+        {
+            result = match!;
+            validationErrorMessage = string.Empty;
+            return true;
+        }
+
+        // fallback to BindConverter for primitive types
+        if (BindConverter.TryConvertTo<TOption>(value, CultureInfo.CurrentCulture, out var parsed))
+        {
+            result = parsed!;
+            validationErrorMessage = string.Empty;
+            return true;
+        }
+
+        result = default;
+        validationErrorMessage = $"The selected value {value} is not valid.";
+        return false;
+    }
+}
