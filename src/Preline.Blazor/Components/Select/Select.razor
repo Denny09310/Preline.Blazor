@@ -3,36 +3,59 @@
 @typeparam TOption where TOption : notnull
 @attribute [CascadingTypeParameter(nameof(TOption))]
 
-<select @bind="CurrentValueAsString" class="@Class" @attributes="AdditionalAttributes">
-    @if (!HasValue)
-    {
-        <option value="" disabled selected hidden>
-            @Placeholder
-        </option>
-    }
+<div class="relative">
+    <select @bind="CurrentValueAsString" class="@Class" @attributes="AdditionalAttributes">
+        @if (!HasValue)
+        {
+            <option value="" disabled selected hidden>
+                @Placeholder
+            </option>
+        }
 
-    @foreach (var item in Items)
-    {
-        <option value="@ValueSelector(item)">
-            @if (ItemContent is not null)
+        @foreach (var item in Items)
+        {
+            <option value="@ValueSelector(item)">
+                @if (ItemContent is not null)
+                {
+                    @ItemContent(item)
+                }
+                else
+                {
+                    @item?.ToString()
+                }
+            </option>
+        }
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-8">
+        @if (EditContext is not null && EditContext.IsModified())
+        {
+            @if (EditContext.IsValid(FieldIdentifier))
             {
-                @ItemContent(item)
+                <svg class="size-4 shrink-0 text-teal-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
             }
             else
             {
-                @item?.ToString()
+                <svg class="size-4 shrink-0 text-red-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" x2="12" y1="8" y2="12"></line>
+                    <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
             }
-        </option>
-    }
-</select>
+        }
+    </div>
+</div>
 
 @code
 {
     [Parameter] public RenderFragment<TOption>? ItemContent { get; set; }
 
     [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public bool Pill { get; set; }
 
-    [Parameter] public Select.Variants Variant { get; set; }
+    [Parameter] public Select.Variants Variant { get; set; } = Select.Variants.Default;
+    [Parameter] public Select.Sizes Size { get; set; } = Select.Sizes.Medium;
 
     [Parameter] public IEnumerable<TOption> Items { get; set; } = [];
 
@@ -40,15 +63,24 @@
 
     private bool HasValue => !EqualityComparer<TOption>.Default.Equals(Value, default);
 
-    private string Class => new CssBuilder("block w-full rounded-lg px-4 py-3 pe-9 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-400 dark:focus:ring-neutral-600")
+    private string Class => new CssBuilder("block w-full pe-16 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-400 dark:focus:ring-neutral-600")
         .Add(SelectVariant())
+        .Add(SelectSize())
+        .Add(Pill ? "rounded-full" : "rounded-lg")
         .Add(AdditionalAttributes)
         .Build();
 
     private string SelectVariant() => Variant switch
     {
-        Select.Variants.Gray => "border-transparent bg-gray-100 dark:placeholder-neutral-500 dark:border-neutral-700 dark:bg-neutral-900",
-        _ or Select.Variants.Default => "border-gray-200 dark:bg-neutral-700 dark:border-transparent"
+        Select.Variants.Gray => "bg-gray-100 border-transparent dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:focus:ring-neutral-600",
+        _ or Select.Variants.Default => "border-gray-200 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+    };
+
+    private string SelectSize() => Size switch
+    {
+        Select.Sizes.Small => "py-2 px-3",
+        Select.Sizes.Large => "sm:p-5 p-4",
+        _ or Select.Sizes.Medium => "py-3 px-4"
     };
 
     protected override string FormatValueAsString(TOption? value)
