@@ -1,0 +1,112 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineInputBase<string>
+
+<div class="@WrapperClass">
+    @if (!string.IsNullOrEmpty(Label) && !FloatingLabel)
+    {
+        <label for="@Id" class="@LabelClass">@Label</label>
+    }
+
+    <div class="relative">
+        <input @bind="CurrentValueAsString" id="@Id" class="@Class" placeholder="@Placeholder" @attributes="AdditionalAttributes" />
+
+        @if (!string.IsNullOrEmpty(Label) && FloatingLabel)
+        {
+            <label for="@Id" class="@LabelClass">@Label</label>
+        }
+
+        @if (Start is not null && !FloatingLabel)
+        {
+            <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+                @Start
+            </div>
+        }
+
+        @if (End is not null)
+        {
+            <div class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3">
+                @End
+            </div>
+        }
+
+    </div>
+
+    @if (!string.IsNullOrEmpty(HelperText))
+    {
+        <p class="mt-2 text-sm text-gray-500 dark:text-neutral-500" id="hs-input-helper-text">@HelperText</p>
+    }
+</div>
+
+@code 
+{
+    [Parameter] public RenderFragment? Start { get; set; }
+    [Parameter] public RenderFragment? End { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-input-{Identifier.NewId()}";
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string? HelperText { get; set; }
+    [Parameter] public bool FloatingLabel { get; set; }
+    [Parameter] public bool Pill { get; set; }
+    [Parameter] public Variants Variant { get; set; }
+    [Parameter] public Styles.Input? Styles { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (FloatingLabel && string.IsNullOrEmpty(Placeholder))
+        {
+            Placeholder = " ";
+        }
+    }
+
+    private string Class => new CssBuilder("peer block w-full sm:text-sm disabled:opacity-50 disabled:pointer-events-none")
+        .Add(SelectVariant())
+        .Add(VariantPadding())
+        .Add(Pill ? "rounded-full" : "rounded-lg", Variant is not Variants.Underline)
+        .Add("placeholder:text-transparent focus:pt-6 focus:pb-2 not-placeholder-shown:pt-6 not-placeholder-shown:pb-2 autofill:pt-6 autofill:pb-2", FloatingLabel)
+        .Add("ps-11", Start is not null && !FloatingLabel)
+        .Add("pe-11", End is not null)
+        .Add(AdditionalAttributes)
+        .Build();
+
+    private string WrapperClass => new CssBuilder()
+        .Add("relative", FloatingLabel)
+        .Add(Styles?.Wrapper)
+        .Build();
+
+    private string LabelClass => new CssBuilder()
+        .Add("block text-sm font-medium mb-2 dark:text-white", !FloatingLabel)
+        .Add(FloatingLabelClasses(), FloatingLabel)
+        .Add(Styles?.Label)
+        .Build();
+
+    private string SelectVariant() => Variant switch
+    {
+        Variants.Default => "border border-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600",
+        Variants.Gray => "bg-gray-100 border border-transparent focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600",
+        Variants.Underline => "bg-transparent border-t-transparent border-x-transparent border-b-2 border-b-gray-200 focus:border-b-blue-500 focus:ring-0 dark:border-b-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600 dark:focus:border-b-neutral-600",
+        _ => ""
+    };
+
+    private string VariantPadding() => Variant switch
+    {
+        Variants.Default or Variants.Gray => FloatingLabel ? "p-4" : "py-2.5 sm:py-3 px-4",
+        Variants.Underline => "py-4 px-0",
+        _ => ""
+    };
+
+    private static string FloatingLabelClasses() =>
+        "absolute top-0 start-0 p-4 h-full sm:text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent origin-[0_0] " +
+        "dark:text-white peer-disabled:opacity-50 peer-disabled:pointer-events-none " +
+        "peer-focus:scale-90 peer-focus:translate-x-0.5 peer-focus:-translate-y-1.5 peer-focus:text-gray-500 dark:peer-focus:text-neutral-500 " +
+        "peer-not-placeholder-shown:scale-90 peer-not-placeholder-shown:translate-x-0.5 peer-not-placeholder-shown:-translate-y-1.5 peer-not-placeholder-shown:text-gray-500 dark:peer-not-placeholder-shown:text-neutral-500 dark:text-neutral-500";
+
+    protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+    {
+        result = value ?? string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
+
+    public enum Variants { Default, Gray, Underline }
+}
