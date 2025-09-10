@@ -36,7 +36,7 @@
 
     [Parameter] public IEnumerable<TOption> Items { get; set; } = [];
 
-    [Parameter] public Func<TOption, string?> ValueSelector { get; set; } = item => BindConverter.FormatValue(item)?.ToString();
+    [Parameter] public Func<TOption, string> ValueSelector { get; set; } = item => BindConverter.FormatValue(item)!.ToString()!;
 
     private bool HasValue => !EqualityComparer<TOption>.Default.Equals(Value, default);
 
@@ -50,6 +50,12 @@
         Select.Variants.Gray => "border-transparent bg-gray-100 dark:placeholder-neutral-500 dark:border-neutral-700 dark:bg-neutral-900",
         _ or Select.Variants.Default => "border-gray-200 dark:bg-neutral-700 dark:border-transparent"
     };
+
+    protected override string FormatValueAsString(TOption? value)
+    {
+        if (value is null) return string.Empty;
+        return ValueSelector(value);
+    }
 
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TOption result, [NotNullWhen(false)] out string validationErrorMessage)
     {
