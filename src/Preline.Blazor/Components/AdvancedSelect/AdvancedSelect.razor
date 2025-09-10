@@ -1,0 +1,50 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+@typeparam TOption where TOption : notnull
+@attribute [CascadingTypeParameter(nameof(TOption))]
+
+@inject IJSRuntime JSRuntime
+@inject TemplateHostRenderer Renderer
+
+<select @ref="_element" hidden>
+    @foreach (var item in Items)
+    {
+        <option>@ValueSelector(item)</option>
+    }
+</select>
+
+@code
+{
+    [Parameter] public RenderFragment? ItemContent { get; set; }
+    [Parameter] public RenderFragment? ToggleContent { get; set; }
+
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public Styles.AdvancedSelect? Styles { get; set; }
+    [Parameter] public IEnumerable<TOption> Items { get; set; } = [];
+    [Parameter] public Func<TOption, string> ValueSelector { get; set; } = item => BindConverter.FormatValue(item)!.ToString()!;
+
+    private ElementReference _element;
+    private IJSObjectReference? _reference;
+    private DotNetObjectReference<AdvancedSelect<TOption>>? _instance;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import",
+                "./_content/Preline.Blazor/Components/AdvancedSelect/AdvancedSelect.razor.js");
+
+            var parameters = await AdvancedSelectInitParameters.CreateAsync(this, Renderer);
+
+            _instance = DotNetObjectReference.Create(this);
+            _reference = await module.InvokeAsync<IJSObjectReference>(
+                "initAdvancedSelect",
+                _element,
+                _instance,
+                parameters);
+        }
+    }
+}
