@@ -1,9 +1,9 @@
 @namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
-<button id="@Dropdown.Id" type="button" class="@Class" aria-haspopup="menu" aria-expanded="false" aria-label="Menu" @attributes="AdditionalAttributes">
+<Button id="@Dropdown.Id" class="@Class" aria-haspopup="menu" aria-expanded="false" aria-label="Menu" @attributes="AdditionalAttributes">
     @ChildContent
-</button>
+</Button>
 
 @code
 {
