@@ -1,4 +1,4 @@
-namespace Preline.Blazor.Internals;
+﻿namespace Preline.Blazor.Internals;
 
 internal readonly struct StyleBuilder
 {
@@ -26,13 +26,17 @@ internal readonly struct StyleBuilder
         return this;
     }
 
-    public StyleBuilder Add(Dictionary<string, object> attributes)
+    public StyleBuilder Add(IReadOnlyDictionary<string, object>? attributes)
     {
+        if (attributes == null)
+        {
+            return this;
+        }
+
         if (attributes.TryGetValue("style", out var obj)
             && obj is string str
             && !string.IsNullOrWhiteSpace(str))
         {
-            attributes.Remove("style");
             _styles.Add(str);
         }
 

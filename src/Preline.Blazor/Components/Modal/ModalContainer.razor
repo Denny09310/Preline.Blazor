@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inject IModalService ModalService
 
 <Modal @ref="modal" VisibilityChanged="VisibilityChangedHandler">
@@ -23,7 +23,7 @@
     {
         if (open) return;
 
-        ModalService.Close(ModalResult.Cancel());
+        await ModalService.CloseAsync(ModalResult.Cancel());
         
         content = null;
         await InvokeAsync(StateHasChanged);

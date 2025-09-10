@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
@@ -19,7 +19,7 @@
     [Parameter] public bool? HasAutofocus { get; set; }
     [Parameter] public bool? HasDynamicZIndex { get; set; }
     [Parameter] public bool? IsLayoutAffect { get; set; }
-    [Parameter] public OverlayBackdrops? OverlayBackdrop { get; set; }
+    [Parameter] public Backdrops? OverlayBackdrop { get; set; }
     [Parameter] public Resolutions? AutoClose { get; set; }
     [Parameter] public EqualityTypes? AutoCloseEqualityType { get; set; }
     [Parameter] public Resolutions? Opened { get; set; }
@@ -87,7 +87,7 @@
         });
     }
 
-    public enum OverlayBackdrops
+    public enum Backdrops
     {
         [Description("null")]
         Null,

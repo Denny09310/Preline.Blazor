@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
 <Overlay @ref="overlay" Id="@Id" BodyScroll="@BodyScroll" TabAccessibilityLimited="@TabAccessibilityLimited" HasAutofocus="@HasAutofocus" HasDynamicZIndex="@HasDynamicZIndex" IsLayoutAffect="@IsLayoutAffect" OverlayBackdrop="@OverlayBackdrop" AutoClose="@AutoClose" AutoCloseEqualityType="@AutoCloseEqualityType" Opened="@Opened" AutoHide="@AutoHide" VisibilityChanged="@VisibilityChanged">
@@ -19,7 +19,7 @@
     [Parameter] public bool? HasAutofocus { get; set; }
     [Parameter] public bool? HasDynamicZIndex { get; set; }
     [Parameter] public bool? IsLayoutAffect { get; set; }
-    [Parameter] public Overlay.OverlayBackdrops? OverlayBackdrop { get; set; }
+    [Parameter] public Overlay.Backdrops? OverlayBackdrop { get; set; }
     [Parameter] public Overlay.Resolutions? AutoClose { get; set; }
     [Parameter] public Overlay.EqualityTypes? AutoCloseEqualityType { get; set; }
     [Parameter] public Overlay.Resolutions? Opened { get; set; }

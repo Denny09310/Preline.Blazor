@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
 <div class="relative inline-block">
@@ -32,9 +32,8 @@
     [Parameter] public bool IsPlaceholder { get; set; }
     [Parameter] public string? Image { get; set; }
     [Parameter] public string? Initials { get; set; }
-
-    [Parameter] public PlaceholderSizes Size { get; set; } = PlaceholderSizes.Medium;
-    [Parameter] public AvatarVariants Variant { get; set; } = AvatarVariants.Solid;
+    [Parameter] public Sizes Size { get; set; } = Sizes.Medium;
+    [Parameter] public Variants Variant { get; set; } = Variants.Solid;
 
     private bool IsImage => !string.IsNullOrEmpty(Image);
     private bool IsInitials => !string.IsNullOrEmpty(Initials);
@@ -50,33 +49,20 @@
 
     private string SelectSize() => Size switch
     {
-        PlaceholderSizes.Small => "size-6 text-xs",
-        PlaceholderSizes.Large => "size-11 text-sm",
-        PlaceholderSizes.ExtraLarge => "size-15.5 text-lg",
-        _ or PlaceholderSizes.Medium => "size-9.5",
+        Sizes.Small => "size-6 text-xs",
+        Sizes.Large => "size-11 text-sm",
+        Sizes.ExtraLarge => "size-15.5 text-lg",
+        _ or Sizes.Medium => "size-9.5",
     };
 
     private string SelectVariant() => Variant switch
     {
-        AvatarVariants.Soft => "bg-gray-100 text-gray-800 dark:bg-white/10 dark:text-white",
-        AvatarVariants.Outline => "border border-gray-800 text-gray-800 dark:border-neutral-200 dark:text-white",
-        AvatarVariants.White => "border border-gray-200 bg-white text-gray-800 shadow-2xs dark:bg-neutral-900 dark:border-neutral-700 dark:text-white",
-        _ or AvatarVariants.Solid => "bg-gray-800 font-semibold text-white dark:bg-white dark:text-neutral-800",
+        Variants.Soft => "bg-gray-100 text-gray-800 dark:bg-white/10 dark:text-white",
+        Variants.Outline => "border border-gray-800 text-gray-800 dark:border-neutral-200 dark:text-white",
+        Variants.White => "border border-gray-200 bg-white text-gray-800 shadow-2xs dark:bg-neutral-900 dark:border-neutral-700 dark:text-white",
+        _ or Variants.Solid => "bg-gray-800 font-semibold text-white dark:bg-white dark:text-neutral-800",
     };
 
-    public enum PlaceholderSizes
-    {
-        Small,
-        Medium,
-        Large,
-        ExtraLarge
-    }
-
-    public enum AvatarVariants
-    {
-        Solid,
-        Soft,
-        Outline,
-        White
-    }
+    public enum Sizes { Small, Medium, Large, ExtraLarge }
+    public enum Variants { Solid, Soft, Outline, White }
 }

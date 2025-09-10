@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
 <span class="@Class" @attributes="AdditionalAttributes">
@@ -9,8 +9,8 @@
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter] public IndicatorPositions Position { get; set; } = IndicatorPositions.TopRight;
-    [Parameter] public IndicatorSizes Size { get; set; } = IndicatorSizes.Medium;
+    [Parameter] public Positions Position { get; set; } = Positions.TopRight;
+    [Parameter] public Sizes Size { get; set; } = Sizes.Medium;
 
     private string Class => new CssBuilder("absolute block size-1.5 rounded-full ring-2 ring-white bg-gray-400 dark:ring-neutral-900")
         .Add(SelectPosition())
@@ -20,33 +20,20 @@
 
     private string SelectPosition() => Position switch
     {
-        IndicatorPositions.TopLeft => "top-0 start-0",
-        IndicatorPositions.BottomRight => "bottom-0 end-0",
-        IndicatorPositions.BottomLeft => "bottom-0 start-0",
-        _ or IndicatorPositions.TopRight => "top-0 end-0",
+        Positions.TopLeft => "top-0 start-0",
+        Positions.BottomRight => "bottom-0 end-0",
+        Positions.BottomLeft => "bottom-0 start-0",
+        _ or Positions.TopRight => "top-0 end-0",
     };
 
     private string SelectSize() => Size switch
     {
-        IndicatorSizes.Small => "size-1.5",
-        IndicatorSizes.Large => "size-3",
-        IndicatorSizes.ExtraLarge => "size-3.5",
-        _ or IndicatorSizes.Medium => "size-2",
+        Sizes.Small => "size-1.5",
+        Sizes.Large => "size-3",
+        Sizes.ExtraLarge => "size-3.5",
+        _ or Sizes.Medium => "size-2",
     };
 
-    public enum IndicatorPositions
-    {
-        TopRight,
-        TopLeft,
-        BottomRight,
-        BottomLeft
-    }
-
-    public enum IndicatorSizes
-    {
-        Small,
-        Medium,
-        Large,
-        ExtraLarge
-    }
+    public enum Positions { TopRight, TopLeft, BottomRight, BottomLeft }
+    public enum Sizes { Small, Medium, Large, ExtraLarge }
 }

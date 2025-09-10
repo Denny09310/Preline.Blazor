@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
 <div class="@Class" role="menu" aria-orientation="vertical" aria-labelledby="@Dropdown.Id" @attributes="AdditionalAttributes">
@@ -11,7 +11,7 @@
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private string Class => new CssBuilder("hs-dropdown-menu z-10 hidden opacity-0 hs-dropdown-open:opacity-100")
+    private string Class => new CssBuilder("hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 w-56 hidden z-10 mt-2 min-w-60 bg-white")
         .Add(AdditionalAttributes)
         .Build();
 }

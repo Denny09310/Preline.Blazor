@@ -53,12 +53,9 @@
 
     [Parameter] public string? Placeholder { get; set; }
     [Parameter] public bool Pill { get; set; }
-
     [Parameter] public Select.Variants Variant { get; set; } = Select.Variants.Default;
     [Parameter] public Select.Sizes Size { get; set; } = Select.Sizes.Medium;
-
     [Parameter] public IEnumerable<TOption> Items { get; set; } = [];
-
     [Parameter] public Func<TOption, string> ValueSelector { get; set; } = item => BindConverter.FormatValue(item)!.ToString()!;
 
     private bool HasValue => !EqualityComparer<TOption>.Default.Equals(Value, default);

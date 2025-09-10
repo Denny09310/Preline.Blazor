@@ -2,16 +2,6 @@
 
 public static class Select
 {
-    public enum Variants
-    {
-        Default,
-        Gray
-    }
-
-    public enum Sizes
-    {
-        Small,
-        Medium,
-        Large
-    }
+    public enum Variants { Default, Gray }
+    public enum Sizes { Small, Medium, Large }
 }

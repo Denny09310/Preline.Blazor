@@ -26,8 +26,7 @@
     [Parameter] public RenderFragment? Action { get; set; }
 
     [Parameter] public string Id { get; set; } = $"hs-alert-{Identifier.NewId()}";
-
-    [Parameter] public AlertVariant Variant { get; set; } = AlertVariant.Solid;
+    [Parameter] public Variants Variant { get; set; } = Variants.Solid;
 
     private string Class => new CssBuilder("flex items-start rounded-lg p-4 border shadow-sm")
         .Add(SelectClasses())
@@ -36,16 +35,11 @@
 
     private string SelectClasses() => Variant switch
     {
-        AlertVariant.Solid => "bg-white border-gray-200 text-gray-800 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200",
-        AlertVariant.Outlined => "border border-gray-200 text-gray-800 dark:border-neutral-700 dark:text-neutral-200",
-        AlertVariant.Soft => "bg-gray-50 text-gray-800 dark:bg-neutral-800/5 dark:text-neutral-200",
+        Variants.Solid => "bg-white border-gray-200 text-gray-800 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200",
+        Variants.Outlined => "border border-gray-200 text-gray-800 dark:border-neutral-700 dark:text-neutral-200",
+        Variants.Soft => "bg-gray-50 text-gray-800 dark:bg-neutral-800/5 dark:text-neutral-200",
         _ => string.Empty
     };
 
-    public enum AlertVariant
-    {
-        Solid,
-        Outlined,
-        Soft
-    }
+    public enum Variants { Solid, Outlined, Soft }
 }

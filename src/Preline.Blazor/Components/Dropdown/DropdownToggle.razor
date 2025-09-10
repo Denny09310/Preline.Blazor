@@ -1,4 +1,4 @@
-@namespace Preline.Blazor.Components
+﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
 <Button id="@Dropdown.Id" class="@Class" aria-haspopup="menu" aria-expanded="false" aria-label="Menu" @attributes="AdditionalAttributes">
@@ -11,7 +11,7 @@
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private string Class => new CssBuilder("hs-dropdown-toggle inline-flex items-center justify-center gap-x-2")
+    private string Class => new CssBuilder("hs-dropdown-toggle inline-flex justify-center items-center gap-x-2")
         .Add(AdditionalAttributes)
         .Build();
 }
