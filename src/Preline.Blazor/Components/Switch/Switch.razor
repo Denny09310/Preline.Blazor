@@ -1,0 +1,150 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineInputBase<bool>
+
+<div class="flex items-center gap-x-3">
+    @if (Start is not null)
+    {
+        <span class="text-sm text-gray-500 dark:text-neutral-400">@Start</span>
+    }
+
+    <label for="@Id" class="@WrapperClass">
+        <input type="checkbox"
+               id="@Id"
+               class="peer sr-only"
+               role="switch"
+               aria-checked="@CurrentValue"
+               @bind="CurrentValue"
+               @attributes="AdditionalAttributes" />
+
+        <span class="@TrackClass"></span>
+        <span class="@ThumbClass"></span>
+
+        @if (OffIcon is not null)
+        {
+            <span class="@OffIconClass">@OffIcon</span>
+        }
+        @if (OnIcon is not null)
+        {
+            <span class="@OnIconClass">@OnIcon</span>
+        }
+    </label>
+
+    @if (End is not null)
+    {
+        <span class="text-sm text-gray-500 dark:text-neutral-400">@End</span>
+    }
+</div>
+
+@code 
+{
+    [Parameter] public RenderFragment? Start { get; set; }
+    [Parameter] public RenderFragment? End { get; set; }
+    [Parameter] public RenderFragment? OffIcon { get; set; }
+    [Parameter] public RenderFragment? OnIcon { get; set; }
+
+    [Parameter] public string Id { get; set; } = $"hs-switch-{Identifier.NewId()}";
+    [Parameter] public Sizes Size { get; set; } = Sizes.Medium;
+    [Parameter] public Variants Variant { get; set; } = Variants.Solid;
+    [Parameter] public Styles.Switch? Styles { get; set; }
+
+    private string WrapperClass => new CssBuilder("relative inline-block cursor-pointer")
+        .Add(SelectWrapperSize())
+        .Add(Styles?.Wrapper)
+        .Build();
+
+    private string TrackClass => new CssBuilder("absolute inset-0 rounded-full transition-colors duration-200 ease-in-out peer-disabled:opacity-50 peer-disabled:pointer-events-none")
+        .Add(SelectTrackVariant())
+        .Add(Styles?.Track)
+        .Build();
+
+    private string ThumbClass => new CssBuilder("absolute top-1/2 start-0.5 -translate-y-1/2 rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full")
+        .Add(SelectThumbSize())
+        .Add(SelectThumbVariant())
+        .Add(Styles?.Thumb)
+        .Build();
+
+    private string OffIconClass => new CssBuilder(IconBaseClass)
+        .Add(SelectOffIconPosition())
+        .Build();
+
+    private string OnIconClass => new CssBuilder(IconBaseClass)
+        .Add(SelectOnIconPosition())
+        .Build();
+
+    private static string IconBaseClass =>
+        "absolute top-1/2 flex size-5 -translate-y-1/2 items-center justify-center text-gray-500 transition-colors duration-200 dark:text-neutral-500";
+
+    private string SelectWrapperSize() => Size switch
+    {
+        Sizes.ExtraSmall => "w-9 h-5",
+        Sizes.Small => "w-11 h-6",
+        Sizes.Medium => "w-13 h-7",
+        Sizes.Large => "w-15 h-8",
+        _ => "w-13 h-7"
+    };
+
+    private string SelectThumbSize() => Size switch
+    {
+        Sizes.ExtraSmall => "size-4",
+        Sizes.Small => "size-5",
+        Sizes.Medium => "size-6",
+        Sizes.Large => "size-7",
+        _ => "size-6"
+    };
+
+    private string SelectOnIconPosition() => Size switch
+    {
+        Sizes.ExtraSmall => "end-0",
+        Sizes.Small => "end-0.5",
+        Sizes.Medium => "end-1.5",
+        Sizes.Large => "end-1",
+        _ => "end-1.5"
+    };
+
+    private string SelectOffIconPosition() => Size switch
+    {
+        Sizes.ExtraSmall => "start-0",
+        Sizes.Small => "start-0.5",
+        Sizes.Medium => "start-1.5",
+        Sizes.Large => "start-1",
+        _ => "start-1.5"
+    };
+
+    private string SelectTrackVariant() => Variant switch
+    {
+        Variants.Soft => "bg-gray-100 peer-checked:bg-blue-100 dark:bg-neutral-700 dark:peer-checked:bg-blue-800/50",
+        Variants.Solid => "bg-gray-200 peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500",
+        _ => string.Empty
+    };
+
+    private string SelectThumbVariant() => Variant switch
+    {
+        Variants.Soft => "bg-white peer-checked:bg-blue-600 dark:bg-neutral-400 dark:peer-checked:bg-blue-500",
+        Variants.Solid => "bg-white dark:bg-neutral-400 dark:peer-checked:bg-white",
+        _ => string.Empty
+    };
+
+    protected override bool TryParseValueFromString(string? value, out bool result, out string validationErrorMessage)
+    {
+        if (bool.TryParse(value, out var parsed))
+        {
+            result = parsed;
+            validationErrorMessage = string.Empty;
+            return true;
+        }
+
+        if (string.IsNullOrEmpty(value))
+        {
+            result = false;
+            validationErrorMessage = string.Empty;
+            return true;
+        }
+
+        result = false;
+        validationErrorMessage = $"The chosen value '{value}' is not valid.";
+        return false;
+    }
+
+    public enum Sizes { ExtraSmall, Small, Medium, Large }
+    public enum Variants { Solid, Soft }
+}
