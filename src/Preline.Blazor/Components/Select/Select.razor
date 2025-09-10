@@ -3,10 +3,10 @@
 @typeparam TOption where TOption : notnull
 @attribute [CascadingTypeParameter(nameof(TOption))]
 
-<select class="@Class" @bind="CurrentValueAsString" @attributes="AdditionalAttributes">
+<select @bind="CurrentValueAsString" class="@Class" @attributes="AdditionalAttributes">
     @if (!HasValue)
     {
-        <option value="" disabled selected>
+        <option value="" disabled selected hidden>
             @Placeholder
         </option>
     }
