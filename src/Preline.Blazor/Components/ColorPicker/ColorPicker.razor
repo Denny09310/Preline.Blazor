@@ -1,0 +1,18 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineInputBase<string>
+
+<input @bind="CurrentValueAsString" type="color" class="@Class" @attributes="AdditionalAttributes" />
+
+@code
+{
+    private string Class => new CssBuilder("p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 rounded-lg")
+        .Add(AdditionalAttributes)      
+        .Build();
+
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out string result, [NotNullWhen(false)] out string validationErrorMessage)
+    {
+        result = value ?? string.Empty;
+        validationErrorMessage = string.Empty;
+        return true;
+    }
+}
