@@ -1,0 +1,25 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineInputBase<TimeOnly>
+
+<input @bind="CurrentValue" type="time" class="@Class" @attributes="AdditionalAttributes" />
+
+@code
+{
+    private string Class => new CssBuilder("py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-200 dark:placeholder-neutral-400 dark:focus:ring-neutral-600 dark:[&::-webkit-calendar-picker-indicator]:invert")
+        .Add(AdditionalAttributes )
+        .Build();
+
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TimeOnly result, [NotNullWhen(false)] out string validationErrorMessage)
+    {
+        if (TimeOnly.TryParse(value, CultureInfo.CurrentCulture, out var date))
+        {
+            result = date;
+            validationErrorMessage = "";
+            return true;
+        }
+
+        result = TimeOnly.MinValue;
+        validationErrorMessage = "Invalid time format.";
+        return false;
+    } 
+}
