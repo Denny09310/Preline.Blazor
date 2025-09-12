@@ -1,15 +1,21 @@
 ﻿@namespace Preline.Blazor.Components
 @inherits PrelineComponentBase
 
-<div @attributes="@AdditionalAttributes" class="@Class">
-    @ChildContent
-</div>
+<CascadingValue Value="this" IsFixed>
+    <div @attributes="@AdditionalAttributes" class="@Class">
+        @ChildContent
+    </div>
+</CascadingValue>
 
 
-@code {
+@code 
+{
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private string Class => new CssBuilder("inline-flex rounded-lg shadow-2xs [&_button]:first:rounded-s-lg [&_button]:first:ms-0 [&_button]:last:rounded-e-lg [&_button]:last:me-0")
+    [Parameter] public Button.Sizes Size { get; set; }
+    [Parameter] public Button.Variants Variant { get; set; } = Button.Variants.Outline;
+
+    private string Class => new CssBuilder("inline-flex rounded-lg shadow-2xs")
         .Add(AdditionalAttributes)
         .Build();
 }

@@ -7,6 +7,8 @@
 
 @code
 {
+    [CascadingParameter] public ButtonGroup? Group { get; set; }
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter] public string Type { get; set; } = "button";
@@ -18,12 +20,19 @@
     private string Class => new CssBuilder("inline-flex items-center gap-x-2 text-sm font-medium border disabled:opacity-50 disabled:pointer-events-none")
         .Add(SelectSize())
         .Add(SelectVariant())
-        .Add(Pill ? "rounded-full" : "rounded-lg")
+        .Add(SelectRounding())
         .Add("w-full", Block)
         .Add(AdditionalAttributes)
         .Build();
 
-    private string SelectSize() => Size switch
+    private string SelectRounding() => (Group, Pill) switch
+    {
+        (not null, _) => "first:rounded-s-lg first:ms-0 last:rounded-e-lg last:me-0",
+        (null, true) => "rounded-full",
+        _ or (null, false) => "rounded-lg",
+    };
+
+    private string SelectSize() => (Group?.Size ?? Size) switch
     {
         Sizes.Default => "py-3 px-4",
         Sizes.Small => "py-2 px-3",
@@ -31,7 +40,7 @@
         _ => throw new NotImplementedException()
     };
 
-    private string SelectVariant() => Variant switch
+    private string SelectVariant() => (Group?.Variant ?? Variant) switch
     {
         Variants.Solid => "border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700",
         Variants.Outline => "border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 focus:outline-hidden focus:border-blue-600 focus:text-blue-600 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:text-blue-500 dark:focus:border-blue-600",
