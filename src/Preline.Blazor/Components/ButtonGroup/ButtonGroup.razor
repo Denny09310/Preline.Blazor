@@ -1,0 +1,15 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div @attributes="@AdditionalAttributes" class="@Class">
+    @ChildContent
+</div>
+
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Class => new CssBuilder("inline-flex rounded-lg shadow-2xs [&_button]:first:rounded-s-lg [&_button]:first:ms-0 [&_button]:last:rounded-e-lg [&_button]:last:me-0")
+        .Add(AdditionalAttributes)
+        .Build();
+}
