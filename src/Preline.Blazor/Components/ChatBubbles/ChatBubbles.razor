@@ -2,27 +2,29 @@
 @inherits PrelineComponentBase
 
 <li @attributes="AdditionalAttributes" class="@Class">
-    @if (ShowAvatarLeft)
+
+
+    @foreach (var comp in _BubbleComponents)
     {
-        <Avatar Image="@AvatarImage" Initials="@AvatarText" />
-    }
+        if (comp == "avatar")
+        {
+            <Avatar Image="@AvatarImage" Initials="@AvatarText" />
+        }
 
-    <div class="@MessageContainerClass">
-        <div class="@ChatBubbleContentClass">
-            @ChildContent
-        </div>
+        if (comp == "message")
+        {
+            <div class="@MessageContainerClass">
+                <div class="@ChatBubbleContentClass">
+                    @ChildContent
+                </div>
 
-        <div class="@FooterClass">
-            @FooterContent
-        </div>
-    </div>
-
-    @if (ShowAvatarRight)
-    {
-        <Avatar Image="@AvatarImage" Initials="@AvatarText" />
+                <div class="@FooterClass">
+                    @FooterContent
+                </div>
+            </div>
+        }
     }
 </li>
-
 
 @code
 {
@@ -35,8 +37,7 @@
     [Parameter] public MessageType Type { get; set; } = MessageType.Received;
     [Parameter] public bool OneSided { get; set; } = false;
 
-    private bool ShowAvatarLeft => Type == MessageType.Received || OneSided;
-    private bool ShowAvatarRight => Type == MessageType.Sended && !OneSided;
+    private List<string> _BubbleComponents => Type == MessageType.Received || OneSided ? ["avatar", "message"] : ["message", "avatar"];
 
     private string Class => new CssBuilder("max-w-lg flex gap-x-2 sm:gap-x-4")
         .Add(AdditionalAttributes)
