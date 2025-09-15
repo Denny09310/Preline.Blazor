@@ -3,27 +3,26 @@
 
 <li @attributes="AdditionalAttributes" class="@Class">
 
-
-    @foreach (var comp in _BubbleComponents)
+    @if (Type == MessageType.Received || OneSided)
     {
-        if (comp == "avatar")
-        {
-            <Avatar Image="@AvatarImage" Initials="@AvatarText" />
-        }
-
-        if (comp == "message")
-        {
-            <div class="@MessageContainerClass">
-                <div class="@ChatBubbleContentClass">
-                    @ChildContent
-                </div>
-
-                <div class="@FooterClass">
-                    @FooterContent
-                </div>
-            </div>
-        }
+        <Avatar Image="@AvatarImage" Initials="@AvatarText" />
     }
+
+    <div class="@MessageContainerClass">
+        <div class="@ChatBubbleContentClass">
+            @ChildContent
+        </div>
+
+        <div class="@FooterClass">
+            @FooterContent
+        </div>
+    </div>
+
+    @if (Type == MessageType.Sended && !OneSided)
+    {
+        <Avatar Image="@AvatarImage" Initials="@AvatarText" />
+    }
+
 </li>
 
 @code
@@ -37,20 +36,18 @@
     [Parameter] public MessageType Type { get; set; } = MessageType.Received;
     [Parameter] public bool OneSided { get; set; } = false;
 
-    private List<string> _BubbleComponents => Type == MessageType.Received || OneSided ? ["avatar", "message"] : ["message", "avatar"];
-
     private string Class => new CssBuilder("max-w-lg flex gap-x-2 sm:gap-x-4")
         .Add(AdditionalAttributes)
         .Add(Type == MessageType.Sended && !OneSided ? "ms-auto justify-end" : "")
-    .Build();
+        .Build();
 
     private string MessageContainerClass => new CssBuilder("flex flex-col space-y-1")
         .Add(Type == MessageType.Sended && !OneSided ? "items-end text-end" : "items-start text-start")
-    .Build();
+        .Build();
 
     private string FooterClass => new CssBuilder("flex items-center gap-x-1 text-xs text-gray-500 dark:text-neutral-500")
         .Add(Type == MessageType.Sended && !OneSided ? "justify-end" : "")
-    .Build();
+        .Build();
 
     private string ChatBubbleContentClass => Type == MessageType.Received
         ? "bg-white border border-gray-200 rounded-2xl p-4 space-y-3 dark:bg-neutral-900 dark:border-neutral-700"
