@@ -1,0 +1,59 @@
+@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<li @attributes="AdditionalAttributes" class="@Class">
+    @if (ShowAvatarLeft)
+    {
+        <Avatar Image="@AvatarImage" Initials="@AvatarText" />
+    }
+
+    <div class="@MessageContainerClass">
+        <div class="@ChatBubbleContentClass">
+            @ChildContent
+        </div>
+
+        <div class="@FooterClass">
+            @FooterContent
+        </div>
+    </div>
+
+    @if (ShowAvatarRight)
+    {
+        <Avatar Image="@AvatarImage" Initials="@AvatarText" />
+    }
+</li>
+
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+
+    [Parameter] public string? AvatarImage { get; set; }
+    [Parameter] public string? AvatarText { get; set; }
+
+    [Parameter] public MessageType Type { get; set; } = MessageType.Received;
+    [Parameter] public bool OneSided { get; set; } = false;
+
+    private bool ShowAvatarLeft => Type == MessageType.Received || OneSided;
+    private bool ShowAvatarRight => Type == MessageType.Sended && !OneSided;
+
+    private string Class => new CssBuilder("max-w-lg flex gap-x-2 sm:gap-x-4")
+        .Add(AdditionalAttributes)
+        .Add(Type == MessageType.Sended && !OneSided ? "ms-auto justify-end" : "")
+    .Build();
+
+    private string MessageContainerClass => new CssBuilder("flex flex-col space-y-1")
+        .Add(Type == MessageType.Sended && !OneSided ? "items-end text-end" : "items-start text-start")
+    .Build();
+
+    private string FooterClass => new CssBuilder("flex items-center gap-x-1 text-xs text-gray-500 dark:text-neutral-500")
+        .Add(Type == MessageType.Sended && !OneSided ? "justify-end" : "")
+    .Build();
+
+    private string ChatBubbleContentClass => Type == MessageType.Received
+        ? "bg-white border border-gray-200 rounded-2xl p-4 space-y-3 dark:bg-neutral-900 dark:border-neutral-700"
+        : "inline-block bg-blue-600 rounded-2xl p-4 shadow-2xs";
+
+    public enum MessageType { Sended, Received }
+}
