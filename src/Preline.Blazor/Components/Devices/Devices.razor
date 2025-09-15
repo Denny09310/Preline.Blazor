@@ -1,0 +1,49 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<figure class="@Class">
+    @if (Type == DeviceType.Mobile)
+    {
+        <div class="p-1.5 bg-gray-800 shadow-[0_2.75rem_5.5rem_-3.5rem_rgb(45_55_75_/_20%),_0_2rem_4rem_-2rem_rgb(45_55_75_/_30%),_inset_0_-0.1875rem_0.3125rem_0_rgb(45_55_75_/_20%)] dark:bg-neutral-600 dark:shadow-[0_2.75rem_5.5rem_-3.5rem_rgb(0_0_0_/_20%),_0_2rem_4rem_-2rem_rgb(0_0_0_/_30%),_inset_0_-0.1875rem_0.3125rem_0_rgb(0_0_0_/_20%)] rounded-3xl">
+            <img class="max-w-full rounded-[1.25rem] h-auto" src="@_Placeholder" alt="Mobile Placeholder">
+        </div>
+    }
+    else
+    {
+        <div class="relative flex items-center max-w-3xl bg-gray-800 rounded-t-lg py-2 px-24 dark:bg-neutral-700">
+            <div class="flex gap-x-1 absolute top-2/4 start-4 -translate-y-1">
+                <span class="size-2 bg-gray-600 rounded-full dark:bg-neutral-600"></span>
+                <span class="size-2 bg-gray-600 rounded-full dark:bg-neutral-600"></span>
+                <span class="size-2 bg-gray-600 rounded-full dark:bg-neutral-600"></span>
+            </div>
+            <div class="flex justify-center items-center size-full bg-gray-700 text-[.25rem] text-gray-400 rounded-sm sm:text-[.5rem] dark:bg-neutral-600 dark:text-neutral-400">www.preline.com</div>
+        </div>
+
+        <div class="bg-gray-800 rounded-b-lg">
+            <img class="max-w-full h-auto rounded-b-lg" src="@_Placeholder" alt="Browser Placeholder">
+        </div>
+    }
+</figure>
+
+@code {
+    [Parameter] public DeviceType Type { get; set; }
+    [Parameter] public string? Image { get; set; }
+
+    private string _Placeholder =>
+            Image ?? (Type == DeviceType.Mobile
+                        ? "https://placehold.co/280x560"
+                        : "https://placehold.co/1618x1010");
+
+    private string Class => new CssBuilder("max-w-full h-auto")
+        .Add(SelectedDevice())
+    .Build();
+
+    public string SelectedDevice() => (Type) switch
+    {
+        DeviceType.Mobile => "mx-auto w-60",
+        DeviceType.Browser => "ms-auto me-20 relative z-1 w-3xl shadow-[0_2.75rem_3.5rem_-2rem_rgb(45_55_75_/_20%),_0_0_5rem_-2rem_rgb(45_55_75_/_15%)] dark:shadow-[0_2.75rem_3.5rem_-2rem_rgb(0_0_0_/_20%),_0_0_5rem_-2rem_rgb(0_0_0_/_15%)] rounded-b-lg",
+        _ => throw new NotImplementedException()
+    };
+
+    public enum DeviceType { Mobile, Browser }
+}
