@@ -1,0 +1,13 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div class="@Class"></div>
+
+@code {
+    [Parameter] public bool Animation { get; set; } = false;
+
+    private string Class => new CssBuilder("bg-gray-200 rounded-full dark:bg-neutral-700")
+        .Add(AdditionalAttributes)
+        .Add("animate-pulse", Animation)
+        .Build();
+}
