@@ -1,0 +1,42 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div class="@Class" role="status" aria-label="loading">
+    <span class="sr-only">Loading...</span>
+</div>
+
+@code {
+    [Parameter] public Variants Variant { get; set; } = Variants.Dark;
+    [Parameter] public Sizes Size { get; set; } = Sizes.Medium;
+
+    private string Class => new CssBuilder("animate-spin inline-block  border-3 border-current border-t-transparent rounded-full")
+        .Add(SelectVariant())
+        .Add(SelectSize())
+        .Build();
+
+    private string SelectVariant() => (Variant) switch
+    {
+        Variants.Dark => "text-gray-800 dark:text-white",
+        Variants.Gray => "text-gray-400",
+        Variants.Red => "text-red-600",
+        Variants.Yellow => "text-yellow-600",
+        Variants.Green => "text-green-600",
+        Variants.Blue => "text-blue-600 dark:text-blue-500",
+        Variants.Indigo => "text-indigo-600",
+        Variants.Purple => "text-purple-600",
+        Variants.Pink => "text-pink-600",
+        Variants.Orange => "text-orange-600",
+        _ => throw new NotImplementedException()
+    };
+
+    private string SelectSize() => (Size) switch
+    {
+        Sizes.Small => "size-4",
+        Sizes.Medium => "size-6",
+        Sizes.Large => "size-8",
+        _ => throw new NotImplementedException()
+    };
+
+    public enum Variants { Dark, Gray, Red, Yellow, Green, Blue, Indigo, Purple, Pink, Orange }
+    public enum Sizes { Small, Medium, Large }
+}
