@@ -1,0 +1,34 @@
+﻿@namespace Preline.Blazor.Components
+@inherits PrelineComponentBase
+
+<div class="inline-flex items-center">
+    <span class="@Class"></span>
+    <span class="text-gray-600 dark:text-neutral-400">@ChildContent</span>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public Variants Variant { get; set; } = Variants.Gray;
+
+    private string Class => new CssBuilder("size-2 inline-block rounded-full me-2")
+        .Add(SelectVariant())    
+    .Build();
+
+    private string SelectVariant() => (Variant) switch
+    {
+        Variants.Dark => "bg-gray-800 dark:bg-white",
+        Variants.Gray => "bg-gray-500",
+        Variants.Red => "bg-red-500",
+        Variants.Yellow => "bg-yellow-500",
+        Variants.Green => "bg-green-500",
+        Variants.Blue => "bg-blue-600",
+        Variants.Indigo => "bg-indigo-500",
+        Variants.Purple => "bg-purple-500",
+        Variants.Pink => "bg-pink-500",
+        Variants.Light => "bg-white",
+        _ => throw new NotImplementedException()
+    };
+
+    public enum Variants { Dark, Gray, Red, Yellow, Green, Blue, Indigo, Purple, Pink, Light }
+}
